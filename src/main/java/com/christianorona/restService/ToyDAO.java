@@ -16,8 +16,8 @@ public class ToyDAO {
 	public ToyDAO(){
 		// TODO Auto-generated constructor stub
 		String url="jdbc:mysql://christianorona.com:3306/ToyCollector";
-		String user="usr";
-		String pass="pass";
+		String user="sarge";
+		String pass="borrash0";
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn=DriverManager.getConnection(url,user,pass);
@@ -29,7 +29,7 @@ public class ToyDAO {
 	
 	public List<Toy> getAllToys() {
 		List<Toy> toys = new ArrayList<Toy>();
-		String query = "select toy_id,toy_name,toy_photo_path,toy_desc from ToyCollector.TC_TOY";
+		String query = "select toy_id,toy_name,toy_photo_path,toy_desc from ToyCollector.TC_TOY where end_dt is null";
 		try {
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery(query);
@@ -44,7 +44,7 @@ public class ToyDAO {
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			System.out.println(e.getStackTrace());
+			System.out.println("Error while fetching: "+e.getMessage());
 		}
 		return toys;
 	}
@@ -66,7 +66,7 @@ public class ToyDAO {
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			System.out.println(e.getStackTrace());
+			System.out.println("Error while fetching it: "+e.getMessage());
 		}
 		return t;
 	}
@@ -91,6 +91,44 @@ public class ToyDAO {
 			System.out.println("Error while adding it: "+e.getMessage());
 		}
 	}
+	
+	public void updateToy(Toy t) {
+		// TODO Auto-generated method stub
+		String query = "update ToyCollector.TC_TOY set toy_name=?, toy_photo_path=?, toy_desc=? where TOY_ID=?";
+		
+		try {
+			PreparedStatement st = conn.prepareStatement(query);
+			
+			
+			st.setString(1, t.getToy_name());
+			st.setString(2, t.getToy_photo_path());
+			st.setString(3, t.getToy_desc());
+			st.setString(4, t.getToy_id());
+			
+			st.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Error while updatig it: "+e.getMessage());
+		}
+	}
+	
+	public void deleteToy(Toy t) {
+		// TODO Auto-generated method stub
+		String query = "update ToyCollector.TC_TOY set end_dt=NOW() where TOY_ID=?";
+		
+		try {
+			PreparedStatement st = conn.prepareStatement(query);
+			
+			st.setString(1, t.getToy_id());
+			
+			st.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Error while deleting it: "+e.getMessage());
+		}
+	}
 	private int getMaxRowID() {
 		int val=0;
 		String query = "select max(row_id)+1 from ToyCollector.TC_TOY";
@@ -105,7 +143,7 @@ public class ToyDAO {
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			System.out.println(e.getMessage());
+			System.out.println("Error while getting maxRowId: "+e.getMessage());
 		}
 		return val;
 	}
