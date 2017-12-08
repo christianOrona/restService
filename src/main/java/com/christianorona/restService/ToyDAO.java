@@ -17,7 +17,7 @@ public class ToyDAO {
 		// TODO Auto-generated constructor stub
 		String url="jdbc:mysql://christianorona.com:3306/ToyCollector";
 		String user="sarge";
-		String pass="borrash0";
+		String pass="pass";
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn=DriverManager.getConnection(url,user,pass);
